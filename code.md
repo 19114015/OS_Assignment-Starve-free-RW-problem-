@@ -1,12 +1,12 @@
 ## Below mentioned is the definition of Semaphore 
-cpp 
+```cpp 
 struct semaphore{
     int value;
     struct process *list;
 };
-
+```
 ## Implementation of signal() operation 
-cpp
+```cpp
 void signal(semaphore *S){
     S->value++;
     if(S->value <= 0){
@@ -16,11 +16,11 @@ void signal(semaphore *S){
         P.wakeup(); 
     }
 }
-
+```
 ## Below mentioned implementation of wait() operation and signal() operation avoids busy waiting 
 
 ### Implementation of wait() operation 
-cpp
+```cpp
 void wait(semaphore *S){
     S->value--;
     if(S->value < 0){
@@ -28,12 +28,12 @@ void wait(semaphore *S){
         this.block(); /* Blocks the calling process */
     }
 }
-
+```
 
 Here we assumed variables such as activeReadercnt, waitingWritercnt, activeWritercnt, primaryWritercnt and waitingWritercnt to be global variable.
 All global variables are initd to zero.
 ### Below listed is the method to initalise the global variables and semaphore.
-cpp
+```cpp
 void init(){
     int activeReadercnt = 0,waitingWritercnt = 0,activeWritercnt = 0,primaryWritercnt = 0,waitingWritercnt = 0;
     semaphore *mutx, *allowedReaders, *allowedWriters, *finishedWriters;
@@ -54,8 +54,8 @@ void init(){
     finishedWriters->value = 0;
     finishedWriters->list = NULL;
 }
-
-cpp
+```
+```cpp
 ### Below mentioned is the structure of a Reader Process 
 void Readers(){
     wait (*mutx);
@@ -81,8 +81,8 @@ void Readers(){
     }
     signal (*mutx);
 } 
-
-cpp
+```
+```cpp
 void Writer(){
     wait (*mutx);
     if(activeReadercnt + waitingWritercnt == 0){
@@ -121,3 +121,4 @@ void Writer(){
     } 
     signal (*mutx);
 }
+```
