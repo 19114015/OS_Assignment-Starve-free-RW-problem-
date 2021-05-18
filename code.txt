@@ -1,7 +1,7 @@
 //For Reading processes:
 
-	    Down(mutex);                                                 // Initialize mutex by 1 
-			 if(current_running_writers == in_waiting_writers && in_waiting_writers == 0){              // If there is no waiting 
+	    Down(mutex);                                                
+			 if(current_running_writers == in_waiting_writers && in_waiting_writers == 0){             
 				 ++current_running_readers;
          Up(rd_sem);
 			 }
