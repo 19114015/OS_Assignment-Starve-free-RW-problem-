@@ -1,1 +1,65 @@
+//For Reading processes:
 
+	    Down(mutex);                                                 // Initialize mutex by 1 
+			 if(current_running_writers == in_waiting_writers && in_waiting_writers == 0){              // If there is no waiting 
+				 ++current_running_readers;
+         Up(rd_sem);
+			 }
+			 else
+				 ++ in_waiting_readers; 
+
+		Up(mutex);
+	  Down(rd_sem);  
+
+	   
+	   /***************************************************************************************************************
+	   
+	   ...........................................CRITICAL SECTION......................................................	   
+	   
+	   *****************************************************************************************************************/
+
+	   Down(mutex);
+	   --current_running_readers; 
+	   if( in_waiting_writers > 0 && current_running_readers == 0){
+			do{
+         --in_waiting_writers;
+			   ++current_running_writers;
+			   Up(wr_sem);  
+			}
+      while(in_waiting_writers > 0)
+	   }
+	   Up(mutex);
+	   
+	   
+//For Writing Processes:
+
+
+	    Down(mutex);// Initialize mutex by 1 
+			 if(current_running_readers == in_waiting_readers && in_waiting_readers == 0){ // If there is no waiting 
+				 ++current_running_writers;
+         Up(wr_sem);
+			 }
+			 else
+				 ++ in_waiting_writers; 
+
+		Up(mutex);
+	  Down(wr_sem);  
+
+	   
+	   /******************************************************************************************************************
+	   
+	   ...........................................CRITICAL SECTION......................................................	   
+	   
+	   ******************************************************************************************************************/
+
+	   Down(mutex);
+	   --current_running_writers; 
+	   if( in_waiting_readers > 0 && current_running_writers == 0){
+			do{
+			   ++current_running_readers;  
+			   --in_waiting_readers;
+			   Up(rd_sem);  
+			}
+      while(in_waiting_readers > 0)
+	   }
+	   Up(mutex);
